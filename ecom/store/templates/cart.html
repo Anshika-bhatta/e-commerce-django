@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content%}
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Your Shopping Cart</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Review your items</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <br/><br/>
+                    
+                    {% if cart_items %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 50px; height: auto;">
+                                    {{ item.product.name }}
+                                </td>
+                                <td>${{ item.product.price }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'update_cart' item.id %}">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px;">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Update</button>
+                                    </form>
+                                </td>
+                                <td>${{ item.total_price }}</td>
+                                <td>
+                                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td><strong>Total: ${{ total_price }}</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <div class="text-center">
+                        <a href="{% url 'home' %}" class="btn btn-outline-dark">Continue Shopping</a>
+                        <a href="#" class="btn btn-dark">Proceed to Checkout</a>
+                    </div>
+                    
+                    {% else %}
+                    <div class="alert alert-info">
+                        Your cart is empty.
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'home' %}" class="btn btn-dark">Continue Shopping</a>
+                    </div>
+                    {% endif %}
+                    
+                    <br/><br/>
+                </div>
+            </div>
+        </div>
+{% endblock %}

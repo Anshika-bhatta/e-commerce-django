@@ -36,17 +36,16 @@
                                     {{ product.description }}
                                 </div>
                             </div>
-                            <!-- Product actions-->
+<!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                                <div class="text-center">
+                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-dark mt-auto">Add to cart</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                     {% endfor %}
-
-
+                </div>
             </div>
         </section>
-       
 {% endblock %}
