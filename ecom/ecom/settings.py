@@ -114,8 +114,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Stripe Payment Settings
-# STRIPE_PUBLIC_KEY = 'pk_test_51RmncwR5ejbxZGAtzDoAKzXkj2aVXdvFRz02kD2A5BqE3mCWbrNiin63vp9hvH9qu0TSSmDJJP2izAqikvRgNff800YQTxR6bL'
-# STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', 'sk_test_51RmncwR5ejbxZGAtxZqu0iMDwnZCCwFklV1ymylDmYJa4JvvLO9etle9chC7uxR2zsAbozLtCHgUdhc7XRThquch001axFcGz1')
-# STRIPE_WEBHOOK_SECRET = ''
-# DOMAIN_URL = 'http://localhost:8000'  
