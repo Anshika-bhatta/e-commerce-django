@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views, api 
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -25,4 +28,4 @@ urlpatterns = [
     path('api/orders/', api.order_history_api, name='order_history_api'),
     path('api/featured/', api.featured_products_api, name='featured_products_api'),
     
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -72,11 +72,10 @@ def register_user(request):
 @login_required
 def view_cart(request):
     cart_items = Cart.objects.filter(user=request.user)
-    total_price = sum(item.total_price() for item in cart_items)
-    return render(request, 'cart.html', {
-        'cart_items': cart_items,
-        'total_price': total_price
-    })
+    total_price = sum(item.total_price for item in cart_items)  # Note: using property not method
+    context = {'cart_items': cart_items, 'total_price': total_price}
+    return render(request, 'store/cart.html', context)
+    
 
 @login_required
 def add_to_cart(request, product_id):
