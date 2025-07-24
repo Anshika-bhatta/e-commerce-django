@@ -3,14 +3,13 @@ import datetime
 from django.contrib.auth.models import User
 
 class Category(models.Model):
-    name =models.CharField(max_length=50)
+    name =models.CharField(max_length=100)
     
     def __str__(self):
         return self.name
     
     # class Meta:
     #     verbose_name-plural = 'categories'
-
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -24,22 +23,25 @@ class Customer(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 class Product(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
-    Category = models. ForeignKey(Category, on_delete=models.CASCADE,default=1)
+    category = models. ForeignKey(Category, on_delete=models.CASCADE,default=1,null=True)
     description = models.CharField(max_length=100, default='', blank=True, null=True)
     image = models.ImageField(upload_to='upload/products/')
+    is_featured = models.BooleanField(default=False)
 
 def __str__(self):
     return self.name
 
 
 class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)  
     Customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    Product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product)
     quantity = models.IntegerField(default=1)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    status = models.BooleanField(default=False)
+    total_price = models.FloatField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    status = models.CharField(max_length=20, default='Pending')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -7,6 +7,8 @@ from django.db import transaction
 from .models import Product, Cart, Order, Customer
 from .forms import SignUpForm
 import logging
+from django.core.mail import send_mail
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +16,27 @@ logger = logging.getLogger(__name__)
 def home(request):
     products = Product.objects.all()
     return render(request, 'home.html', {'products': products})
+    featured_products = Product.objects.filter(is_featured=True)[:4]
+    return render(request, 'index.html', {'featured_products': featured_products})
+
+def about(request):
+    return render(request, 'about.html')
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        send_mail(
+            f'Contact from {name}',
+            message,
+            email,
+            [settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+        return redirect('home')
+    return render(request, 'contact.html')
+
 
 def login_user(request):
     if request.method == "POST":
@@ -119,8 +142,8 @@ def process_payment(request):
         # Create order for each product in cart
         for cart_item in cart_items:
             Order.objects.create(
-                Customer=customer,  # Must match your model's field name (uppercase C)
-                Product=cart_item.product,  # Must match your model's field name (uppercase P)
+                Customer=customer,  
+                Product=cart_item.product,  
                 quantity=cart_item.quantity,
                 total=cart_item.total_price(),
                 status=True
@@ -146,3 +169,13 @@ def payment_success(request):
 def payment_cancelled(request):
     messages.info(request, "Payment was cancelled.")
     return render(request, 'payment_cancelled.html')
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'order_history.html', {'orders': orders})
+
+def search(request):
+    query = request.GET.get('q')
+    products = Product.objects.filter(name__icontains=query) if query else []
+    return render(request, 'search.html', {'products': products, 'query': query})
