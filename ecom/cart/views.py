@@ -1,4 +1,3 @@
-# cart/views.py
 from django.shortcuts import render, redirect
 from products.models import Product
 
